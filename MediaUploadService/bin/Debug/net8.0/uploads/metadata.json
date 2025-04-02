@@ -1,0 +1,26 @@
+{
+  "3845e377-887e-41e3-bd75-fd06708cb1f2": {
+    "filename": "VALORANT_2023-03-12_18-40-20_0.mp4",
+    "hash": "d170da80cbd4a3a6a2c2623f39864eb7",
+    "size": 23272407,
+    "timestamp": 1743517218,
+    "title": "Test Video 0",
+    "description": "This is a test upload from thread 0",
+    "status": "processed",
+    "processed_timestamp": 1743517223,
+    "video_id": "3845e377-887e-41e3-bd75-fd06708cb1f2",
+    "file_path": "./uploads/3845e377-887e-41e3-bd75-fd06708cb1f2.mp4"
+  },
+  "bb43859e-cc5e-4f13-b866-17705baa36b7": {
+    "filename": "VALORANT_2023-03-12_18-40-20_1.mp4",
+    "hash": "d170da80cbd4a3a6a2c2623f39864eb7",
+    "size": 23272407,
+    "timestamp": 1743517218,
+    "title": "Test Video 1",
+    "description": "This is a test upload from thread 1",
+    "status": "processed",
+    "processed_timestamp": 1743517230,
+    "video_id": "bb43859e-cc5e-4f13-b866-17705baa36b7",
+    "file_path": "./uploads/bb43859e-cc5e-4f13-b866-17705baa36b7.mp4"
+  }
+}

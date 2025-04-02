@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/dayne/projects/discm/ps3/ConsumerBackend/ConsumerBackend.csproj": {}
+  },
+  "projects": {
+    "/home/dayne/projects/discm/ps3/ConsumerBackend/ConsumerBackend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/dayne/projects/discm/ps3/ConsumerBackend/ConsumerBackend.csproj",
+        "projectName": "ConsumerBackend",
+        "projectPath": "/home/dayne/projects/discm/ps3/ConsumerBackend/ConsumerBackend.csproj",
+        "packagesPath": "/home/dayne/.nuget/packages/",
+        "outputPath": "/home/dayne/projects/discm/ps3/ConsumerBackend/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/dayne/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.407/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Uk9vWDb81nM=",
+  "dgSpecHash": "zams3GTpfz8=",
   "success": true,
-  "projectFilePath": "/home/dayne/projects/discm/ps3/MediaUploadService/MediaUploadService.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Kyle\\OneDrive\\Documents\\GitHub\\STDISCM-PS3\\MediaUploadService\\MediaUploadService.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Kyle\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.14\\microsoft.netcore.app.ref.8.0.14.nupkg.sha512",
+    "C:\\Users\\Kyle\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.14\\microsoft.windowsdesktop.app.ref.8.0.14.nupkg.sha512",
+    "C:\\Users\\Kyle\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.14\\microsoft.aspnetcore.app.ref.8.0.14.nupkg.sha512",
+    "C:\\Users\\Kyle\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.14\\microsoft.netcore.app.host.win-x64.8.0.14.nupkg.sha512"
+  ],
   "logs": []
 }

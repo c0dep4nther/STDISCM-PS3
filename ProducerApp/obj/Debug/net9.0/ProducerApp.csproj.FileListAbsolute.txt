@@ -1,0 +1,15 @@
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.AssemblyInfoInputs.cache
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.AssemblyInfo.cs
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.csproj.CoreCompileInputs.cache
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.sourcelink.json
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\bin\Debug\net9.0\ProducerApp.exe
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\bin\Debug\net9.0\ProducerApp.deps.json
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\bin\Debug\net9.0\ProducerApp.runtimeconfig.json
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\bin\Debug\net9.0\ProducerApp.dll
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\bin\Debug\net9.0\ProducerApp.pdb
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.dll
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\refint\ProducerApp.dll
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.pdb
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ProducerApp.genruntimeconfig.cache
+C:\Users\Kyle\OneDrive\Documents\GitHub\STDISCM-PS3\ProducerApp\obj\Debug\net9.0\ref\ProducerApp.dll

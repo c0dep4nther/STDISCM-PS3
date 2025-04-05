@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MediaUploadService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7bae8ffce9353af05526a37fce300c6c016c816")]
 [assembly: System.Reflection.AssemblyProductAttribute("MediaUploadService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MediaUploadService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

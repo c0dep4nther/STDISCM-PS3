@@ -24,12 +24,71 @@ public partial class MainWindow : Window
         @"..\..\..\..\uploads"); // Relative path to uploads folder
     public ObservableCollection<string> VideoFiles { get; set; } = new ObservableCollection<string>();
     private DispatcherTimer previewTimer;
+    private FileSystemWatcher fileWatcher;
 
     public MainWindow()
     {
         InitializeComponent();
         VideoList.ItemsSource = VideoFiles;
         LoadVideos();
+        SetupFileWatcher();
+    }
+
+    private void SetupFileWatcher()
+    {
+        fileWatcher = new FileSystemWatcher(videoFolder)
+        {
+            NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
+            Filter = "*.mp4",
+            EnableRaisingEvents = true
+        };
+
+        // Handle file creation events
+        fileWatcher.Created += (sender, e) =>
+        {
+            // Use Dispatcher to update UI from different thread
+            Dispatcher.Invoke(() =>
+            {
+                string fileName = System.IO.Path.GetFileName(e.FullPath);
+                if (!VideoFiles.Contains(fileName))
+                {
+                    VideoFiles.Add(fileName);
+                }
+            });
+        };
+
+        // Handle file deletion events
+        fileWatcher.Deleted += (sender, e) =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                string fileName = System.IO.Path.GetFileName(e.FullPath);
+                if (VideoFiles.Contains(fileName))
+                {
+                    VideoFiles.Remove(fileName);
+                }
+            });
+        };
+
+        // Handle file rename events
+        fileWatcher.Renamed += (sender, e) =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                string oldFileName = System.IO.Path.GetFileName(e.OldFullPath);
+                string newFileName = System.IO.Path.GetFileName(e.FullPath);
+
+                if (VideoFiles.Contains(oldFileName))
+                {
+                    VideoFiles.Remove(oldFileName);
+                }
+
+                if (!VideoFiles.Contains(newFileName) && System.IO.Path.GetExtension(newFileName).ToLower() == ".mp4")
+                {
+                    VideoFiles.Add(newFileName);
+                }
+            });
+        };
     }
 
     private void LoadVideos()

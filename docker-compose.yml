@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - CONSUMER_THREADS=8  # Configure number of threads here
+      - MAX_QUEUE_LENGTH=100 # Configure max queue length here
+      - STORAGE_PATH=/app/uploads
+    networks:
+      - upload-network
+
+  producer:
+    build:
+      context: .
+      dockerfile: Dockerfile.producer
+    volumes:
+      - ./videos/thread1:/app/videos/thread1
+      - ./videos/thread2:/app/videos/thread2
+      - ./videos/thread3:/app/videos/thread3
+      - ./videos/thread4:/app/videos/thread4
+      - ./videos/thread5:/app/videos/thread5
+    depends_on:
+      - consumer
+    networks:
+      - upload-network
+    environment:
+      - SERVER_HOST=consumer
+      - SERVER_PORT=9000
+      - THREAD_FOLDERS=/app/videos/thread1,/app/videos/thread2,/app/videos/thread3,/app/videos/thread4,/app/videos/thread5
+
+networks:
+  upload-network:
+    driver: bridge

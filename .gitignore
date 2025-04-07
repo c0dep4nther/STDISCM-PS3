@@ -1,6 +1,10 @@
+# ignore visual studio files
 .vscode
 .vs
-.mp4
 
+# ignore build files
 bin/
 obj/
+
+# ignore mp4 files
+*.mp4

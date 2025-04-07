@@ -1,2 +1,6 @@
 .vscode
+.vs
 .mp4
+
+bin/
+obj/

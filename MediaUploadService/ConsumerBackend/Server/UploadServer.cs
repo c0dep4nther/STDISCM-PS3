@@ -17,7 +17,7 @@ namespace MediaUploadService.ConsumerBackend.Server
         private readonly UploadQueue _uploadQueue;
         private readonly VideoMetadataManager _metadataManager;
         private readonly int _port;
-        private TcpListener _listener;
+        private TcpListener? _listener;
         private bool _isRunning;
         private readonly List<Task> _clientTasks = new List<Task>();
 
@@ -65,7 +65,7 @@ namespace MediaUploadService.ConsumerBackend.Server
             finally
             {
                 _isRunning = false;
-                _listener.Stop();
+                _listener?.Stop();
             }
         }
 
@@ -74,7 +74,7 @@ namespace MediaUploadService.ConsumerBackend.Server
             if (_isRunning)
             {
                 _isRunning = false;
-                _listener.Stop();
+                _listener?.Stop();
             }
             
             // Wait for all client tasks to complete with timeout
@@ -88,82 +88,72 @@ namespace MediaUploadService.ConsumerBackend.Server
                 try
                 {
                     var stream = client.GetStream();
+                    var clientEndpoint = client.Client.RemoteEndPoint?.ToString() ?? "Unknown";
                     
-                    // Read metadata size (4 bytes)
-                    byte[] sizeBuffer = new byte[4];
-                    await ReadExactlyAsync(stream, sizeBuffer, 0, 4, cancellationToken);
-                    Array.Reverse(sizeBuffer); // Reverse in-place to handle big-endian
-                    int metadataSize = BitConverter.ToInt32(sizeBuffer, 0); // Convert from big-endian
+                    // Read filename length (4 bytes)
+                    byte[] filenameLengthBuffer = new byte[4];
+                    await ReadExactlyAsync(stream, filenameLengthBuffer, 0, 4, cancellationToken);
+                    int filenameLength = BitConverter.ToInt32(filenameLengthBuffer, 0);
                     
-                    // Read metadata
-                    byte[] metadataBuffer = new byte[metadataSize];
-                    await ReadExactlyAsync(stream, metadataBuffer, 0, metadataSize, cancellationToken);
-                    string metadataJson = Encoding.UTF8.GetString(metadataBuffer);
-                    var metadata = JsonSerializer.Deserialize<Dictionary<string, object>>(metadataJson);
+                    // Read filename
+                    byte[] filenameBuffer = new byte[filenameLength];
+                    await ReadExactlyAsync(stream, filenameBuffer, 0, filenameLength, cancellationToken);
+                    string filename = Encoding.UTF8.GetString(filenameBuffer);
                     
                     // Check if queue is full
                     if (_uploadQueue.IsFull)
                     {
-                        await SendResponseAsync(stream, new { status = "error", message = "Queue full, try again later" });
-                        Console.WriteLine($"Rejected upload from {client.Client.RemoteEndPoint} - queue full");
+                        Console.WriteLine($"Rejected upload from {clientEndpoint} - queue full");
+                        // Send 0 for error
+                        await stream.WriteAsync(new byte[] { 0 }, 0, 1, cancellationToken);
                         return;
                     }
                     
-                    // Check for duplicates
-                    if (metadata.TryGetValue("hash", out var hash) && _metadataManager.IsDuplicate(hash.ToString()))
-                    {
-                        await SendResponseAsync(stream, new { status = "error", message = "Duplicate video detected" });
-                        Console.WriteLine($"Rejected duplicate upload from {client.Client.RemoteEndPoint}");
-                        return;
-                    }
-                    
-                    // Accept upload - generate ID and send acknowledgment
+                    // Generate ID and prepare paths
                     string videoId = _metadataManager.GenerateId();
-                    await SendResponseAsync(stream, new { status = "ok", message = "Ready to receive video", video_id = videoId });
-                    
-                    // Get video size
-                    long videoSize = 0;
-                    if (metadata.TryGetValue("size", out var size) && size is System.Text.Json.JsonElement sizeElement)
-                    {
-                        videoSize = sizeElement.GetInt64();
-                    }
-                    
-                    // Prepare temp file path
+                    string fileExtension = Path.GetExtension(filename);
                     string tempPath = Path.Combine(Path.GetTempPath(), $"temp_{videoId}");
                     
-                    // Receive video data
+                    // Create basic metadata from filename
+                    var metadata = new Dictionary<string, object>
+                    {
+                        { "filename", filename },
+                        { "timestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+                    };
+                    
+                    // Receive file data directly to disk - READ A SPECIFIC NUMBER OF BYTES
+                    long totalBytesRead = 0;
                     using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
                     {
                         byte[] buffer = new byte[8192];
-                        long remaining = videoSize;
+                        int bytesRead;
                         
-                        while (remaining > 0)
+                        // Use a timeout to prevent hanging indefinitely
+                        client.ReceiveTimeout = 30000; // 30 seconds
+                        
+                        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
                         {
-                            int bytesToRead = (int)Math.Min(buffer.Length, remaining);
-                            int bytesRead = await stream.ReadAsync(buffer, 0, bytesToRead, cancellationToken);
-                            
-                            if (bytesRead == 0)
-                                throw new Exception("Connection closed during video transfer");
-                                
                             await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
-                            remaining -= bytesRead;
+                            totalBytesRead += bytesRead;
+                            
+                            // Send acknowledgment early if we have the full file
+                            // This is just a safeguard for large files - we'll still send it again later
+                            if (totalBytesRead > 1024 * 1024 && !stream.DataAvailable)
+                            {
+                                await stream.WriteAsync(new byte[] { 1 }, 0, 1, cancellationToken);
+                                break;
+                            }
                         }
                     }
                     
                     // Create upload item
-                    string fileExtension = ".mp4"; // Default
-                    if (metadata.TryGetValue("filename", out var filename))
-                    {
-                        fileExtension = Path.GetExtension(filename.ToString());
-                    }
-                    
                     var uploadItem = new VideoUploadItem
                     {
                         VideoId = videoId,
                         TempPath = tempPath,
                         FinalPath = Path.Combine(_metadataManager.StoragePath, $"{videoId}{fileExtension}"),
                         Metadata = metadata,
-                        ClientAddress = client.Client.RemoteEndPoint.ToString(),
+                        ClientAddress = clientEndpoint,
                         Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     };
                     
@@ -173,21 +163,22 @@ namespace MediaUploadService.ConsumerBackend.Server
                     {
                         // Queue became full after our check
                         File.Delete(tempPath);
-                        await SendResponseAsync(stream, new { status = "error", message = "Queue full, try again later" });
+                        await stream.WriteAsync(new byte[] { 0 }, 0, 1, cancellationToken);
                         return;
                     }
                     
-                    Console.WriteLine($"Queued video upload from {client.Client.RemoteEndPoint}, ID: {videoId}");
+                    Console.WriteLine($"Queued video upload from {clientEndpoint}, ID: {videoId}, Size: {totalBytesRead} bytes");
                     
-                    // Send completion acknowledgment
-                    await SendResponseAsync(stream, new { status = "ok", message = "Upload complete", video_id = videoId });
+                    // Send acknowledgment
+                    await stream.WriteAsync(new byte[] { 1 }, 0, 1, cancellationToken);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error handling client {client.Client.RemoteEndPoint}: {ex.Message}");
                     try
                     {
-                        await SendResponseAsync(client.GetStream(), new { status = "error", message = ex.Message });
+                        // Send 0 for error
+                        await client.GetStream().WriteAsync(new byte[] { 0 }, 0, 1, cancellationToken);
                     }
                     catch
                     {

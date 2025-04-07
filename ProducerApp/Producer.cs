@@ -36,20 +36,29 @@ namespace ProducerApp
         private void UploadVideo(string filePath)
         {
             Console.WriteLine($"[INFO] Uploading: {Path.GetFileName(filePath)}");
-
+        
             byte[] fileBytes = File.ReadAllBytes(filePath);
             byte[] fileNameBytes = Encoding.UTF8.GetBytes(Path.GetFileName(filePath));
             byte[] fileNameLength = BitConverter.GetBytes(fileNameBytes.Length);
-
-            using TcpClient client = new TcpClient(serverIp, serverPort);
-            using NetworkStream stream = client.GetStream();
+        
+            using (TcpClient client = new TcpClient(serverIp, serverPort))
+            using (NetworkStream stream = client.GetStream())
             {
+                // Send data
                 stream.Write(fileNameLength, 0, 4);
                 stream.Write(fileNameBytes, 0, fileNameBytes.Length);
                 stream.Write(fileBytes, 0, fileBytes.Length);
+                
+                // Wait for server acknowledgment (if your protocol supports it)
+                // For example, read a status byte from the server
+                byte[] response = new byte[1];
+                stream.Read(response, 0, 1);
+                
+                // Properly flush and close
+                stream.Flush();
+                
+                Console.WriteLine($"[SUCCESS] Uploaded: {Path.GetFileName(filePath)}");
             }
-
-            Console.WriteLine($"[SUCCESS] Uploaded: {Path.GetFileName(filePath)}");
         }
     }
 }

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaUploadService", "Media
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MediaUploadService", "MediaUploadService", "{D416F90D-2F07-40F7-8BF6-0887BFAE491F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsumerGUI", "MediaUploadService\ConsumerGUI\ConsumerGUI.csproj", "{67DC2FB0-B15C-4C55-9893-7AD80DD29510}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsumerGUI", "ConsumerGUI\ConsumerGUI.csproj", "{67DC2FB0-B15C-4C55-9893-7AD80DD29510}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

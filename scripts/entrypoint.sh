@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Split the comma-separated list of thread folders
-IFS=',' read -ra FOLDERS <<< "$THREAD_FOLDERS"
+# Get base directory of videos
+BASE_DIR="/app/videos"
 
 # Run the producer app with the correct parameters
 # The app should be modified to accept multiple folder paths
-dotnet ProducerApp.dll "${#FOLDERS[@]}" "$SERVER_HOST" "$SERVER_PORT" "${FOLDERS[@]}"
+dotnet ProducerApp.dll "$PRODUCER_THREADS" "$SERVER_HOST" "$SERVER_PORT" "$BASE_DIR"

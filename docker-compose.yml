@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   consumer:
@@ -10,7 +10,7 @@ services:
     volumes:
       - ./uploads:/app/uploads
     environment:
-      - CONSUMER_THREADS=8  # Configure number of threads here
+      - CONSUMER_THREADS=4 # Configure number of threads here
       - MAX_QUEUE_LENGTH=100 # Configure max queue length here
       - STORAGE_PATH=/app/uploads
     networks:
@@ -21,11 +21,11 @@ services:
       context: .
       dockerfile: Dockerfile.producer
     volumes:
-      - ./videos/thread1:/app/videos/thread1
-      - ./videos/thread2:/app/videos/thread2
-      - ./videos/thread3:/app/videos/thread3
-      - ./videos/thread4:/app/videos/thread4
-      - ./videos/thread5:/app/videos/thread5
+      - ./videos/Producer1:/app/videos/Producer1
+      - ./videos/Producer2:/app/videos/Producer2
+      - ./videos/Producer3:/app/videos/Producer3
+      - ./videos/Producer4:/app/videos/Producer4
+      - ./videos/Producer5:/app/videos/Producer5
     depends_on:
       - consumer
     networks:
@@ -33,7 +33,7 @@ services:
     environment:
       - SERVER_HOST=consumer
       - SERVER_PORT=9000
-      - THREAD_FOLDERS=/app/videos/thread1,/app/videos/thread2,/app/videos/thread3,/app/videos/thread4,/app/videos/thread5
+      - PRODUCER_THREADS=4 # Configure number of threads here
 
 networks:
   upload-network:

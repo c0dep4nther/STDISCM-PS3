@@ -4,13 +4,12 @@ WORKDIR /src
 # Copy csproj files and restore dependencies
 COPY MediaUploadService/*.csproj ./MediaUploadService/
 COPY MediaUploadService/ConsumerBackend/ ./MediaUploadService/ConsumerBackend/
-COPY MediaUploadService/ConsumerGUI/*.csproj ./MediaUploadService/ConsumerGUI/
 COPY MediaUploadService.sln .
-RUN dotnet restore
+RUN dotnet restore MediaUploadService/MediaUploadService.csproj
 
 # Copy the rest of the code and build
 COPY MediaUploadService/ ./MediaUploadService/
-RUN dotnet build -c Release -o /app/build
+RUN dotnet build MediaUploadService/MediaUploadService.csproj -c Release -o /app/build
 RUN dotnet publish MediaUploadService/MediaUploadService.csproj -c Release -o /app/publish
 
 # Build runtime image

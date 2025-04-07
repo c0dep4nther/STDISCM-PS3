@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore dependencies
@@ -11,16 +11,16 @@ RUN dotnet build ProducerApp/ProducerApp.csproj -c Release -o /app/build
 RUN dotnet publish ProducerApp/ProducerApp.csproj -c Release -o /app/publish
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/runtime:8.0
+FROM mcr.microsoft.com/dotnet/runtime:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
 # Create thread-specific video directories
-RUN mkdir -p /app/videos/thread1 \
-    /app/videos/thread2 \
-    /app/videos/thread3 \
-    /app/videos/thread4 \
-    /app/videos/thread5
+RUN mkdir -p /app/videos/Producer1 \
+    /app/videos/Producer2 \
+    /app/videos/Producer3 \
+    /app/videos/Producer4 \
+    /app/videos/Producer5
 
 # Copy an entrypoint script that will parse the thread folders
 COPY scripts/entrypoint.sh /app/

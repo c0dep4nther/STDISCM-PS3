@@ -1,0 +1,38 @@
+# Local development files
+.git
+.github
+.gitignore
+.vscode
+.idea
+*.md
+
+# Videos and uploads (since they're mounted as volumes)
+videos/
+uploads/
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Cache and temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+*.swp
+.DS_Store
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Docker files (optional, depending on your build setup)
+# docker-compose.yml
+# docker-compose.*.yml

@@ -33,7 +33,7 @@ services:
     environment:
       - SERVER_HOST=consumer
       - SERVER_PORT=9000
-      - PRODUCER_THREADS=4 # Configure number of threads here
+      - PRODUCER_THREADS=5 # Configure number of threads here
 
 networks:
   upload-network:
